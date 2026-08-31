@@ -284,7 +284,7 @@ Relaciona parceiros e suas respectivas configurações de monitoramento.
 ## Clonar o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/nome-repositorio.git
+git clone [https://github.com/seu-usuario/nome-repositorio.git](https://github.com/riahsander/incident-management-automation.git)
 ```
 
 ## Instalar dependências
