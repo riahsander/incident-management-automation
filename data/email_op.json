@@ -1,0 +1,148 @@
+{
+  "CLIENTE_A": {
+    "emails": [
+      "noc@empresa-exemplo.com",
+      "servicedesk@portal-exemplo.com",
+      "suporte.n2@empresa-exemplo.com"
+    ]
+  },
+  "CLIENTE_B": {
+    "emails": [
+      "commandcenter@banco-exemplo.com",
+      "squad.atm@banco-exemplo.com",
+      "pse@fornecedor-exemplo.com",
+      "monitoramento@banco-exemplo.com"
+    ]
+  },
+  "CLIENTE_C": {
+    "emails": [
+      "noc@prestadora-exemplo.com",
+      "cmo@cooperativa-exemplo.com",
+      "operacao@cooperativa-exemplo.com",
+      "producao@cooperativa-exemplo.com",
+      "infraestrutura@cooperativa-exemplo.com"
+    ]
+  },
+  "CLIENTE_D": {
+    "emails": [
+      "commandcenter@banco-exemplo.com",
+      "squad.autorizacao@banco-exemplo.com",
+      "monitoramento@banco-exemplo.com",
+      "consultoria@parceiro-exemplo.com",
+      "fornecedor@servicos-exemplo.com"
+    ]
+  },
+  "CLIENTE_E": {
+    "emails": [
+      "noc@cliente-exemplo.com",
+      "operacao@cliente-exemplo.com",
+      "monitoramento@cliente-exemplo.com"
+    ]
+  },
+  "CLIENTE_F": {
+    "emails": [
+      "operacao@instituicao-exemplo.com",
+      "operador@fornecedor-exemplo.com",
+      "monitoramento@instituicao-exemplo.com",
+      "suporte@instituicao-exemplo.com"
+    ]
+  },
+  "CLIENTE_G": {
+    "emails": [
+      "processamentodedados@cliente-exemplo.com",
+      "monitoramento@cliente-exemplo.com",
+      "infraestrutura@cliente-exemplo.com"
+    ]
+  },
+  "CLIENTE_H": {
+    "emails": [
+      "monitoracao@cliente-exemplo.com",
+      "atendimento.atm@cliente-exemplo.com",
+      "sustentacao@cliente-exemplo.com"
+    ]
+  },
+  "CLIENTE_I": {
+    "emails": [
+      "gemon@cliente-exemplo.com",
+      "monitoramento@parceiro-exemplo.com",
+      "operacoes@cliente-exemplo.com",
+      "geter@cliente-exemplo.com"
+    ]
+  },
+  "CLIENTE_J": {
+    "emails": [
+      "noc@instituicao-exemplo.gov",
+      "infraestrutura.ti@instituicao-exemplo.gov"
+    ]
+  },
+  "CLIENTE_K": {
+    "emails": [
+      "monitoracao@cliente-exemplo.com",
+      "sustentacao@cliente-exemplo.com",
+      "operacoes@cliente-exemplo.com"
+    ]
+  },
+  "CLIENTE_L": {
+    "emails": [
+      "noc@processadora-exemplo.com",
+      "operacoes@processadora-exemplo.com",
+      "monitoramento@processadora-exemplo.com"
+    ]
+  },
+  "CLIENTE_M": {
+    "emails": [
+      "pse@fornecedor-exemplo.com",
+      "suporte@fornecedor-exemplo.com",
+      "operacao@cliente-exemplo.com"
+    ]
+  },
+  "CLIENTE_N": {
+    "emails": [
+      "noc@processadora-exemplo.com",
+      "vol@bandeira-exemplo.com",
+      "operacoes@processadora-exemplo.com",
+      "monitoramento@processadora-exemplo.com"
+    ]
+  },
+  "CLIENTE_O": {
+    "emails": [
+      "monitoramento@cooperativa-exemplo.com",
+      "seguranca.redes@cooperativa-exemplo.com",
+      "caixaeletronico@cooperativa-exemplo.com",
+      "sustentacao@cooperativa-exemplo.com"
+    ]
+  },
+  "CLIENTE_P": {
+    "emails": [
+      "infra@cooperativa-exemplo.com",
+      "moti@cooperativa-exemplo.com",
+      "relacionamento@cooperativa-exemplo.com",
+      "suporte@cooperativa-exemplo.com",
+      "plataforma@cooperativa-exemplo.com",
+      "operacoes@cooperativa-exemplo.com"
+    ]
+  },
+  "CLIENTE_Q": {
+    "emails": [
+      "analista@cooperativa-exemplo.com",
+      "atm.parceiros@cooperativa-exemplo.com",
+      "monitoracao.ti@cooperativa-exemplo.com",
+      "cartoes@cooperativa-exemplo.com",
+      "suporte.n1@cooperativa-exemplo.com",
+      "suporte.n2@cooperativa-exemplo.com",
+      "suporte.n3@cooperativa-exemplo.com",
+      "operacoes@cooperativa-exemplo.com",
+      "sustentacao@cooperativa-exemplo.com",
+      "infraestrutura@cooperativa-exemplo.com",
+      "gestao@cooperativa-exemplo.com"
+    ]
+  },
+  "CLIENTE_R": {
+    "emails": [
+      "sustentacao.autorizacao@empresa-exemplo.com",
+      "suporte@empresa-exemplo.com",
+      "operacoes@empresa-exemplo.com",
+      "parceiro@consultoria-exemplo.com"
+    ]
+  }
+}
