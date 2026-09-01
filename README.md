@@ -4,6 +4,10 @@ Projeto desenvolvido em Python para automatizar o registro, documentação e com
 
 A aplicação centraliza a coleta de informações, registra ocorrências em uma plataforma de chamados, gera evidências visuais automaticamente e prepara comunicações para as equipes responsáveis.
 
+Essa automação ainda está em estágio inicial, no futuro será feito correções, atualizações e melhorias. 
+
+Futuras melhorias: Adicionar um criador de logs para facilitar a identificação de erros, integrar o preenchimento de planilhas Excel e automatizar o envio de mensagens via Teams.
+
 > **Importante**
 >
 > Esta é uma versão demonstrativa do projeto.

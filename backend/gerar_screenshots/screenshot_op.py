@@ -3,19 +3,19 @@ screenshot_op.py
 
 Módulo responsável pela captura automatizada de evidências operacionais.
 
-Utilizando o Playwright, o módulo acessa a plataforma de monitoramento,
+Utilizando Playwright, o módulo acessa a plataforma de monitoramento,
 realiza autenticação e captura screenshots dos cards operacionais
-correspondentes à operadora informada.
+associados à operadora informada.
 
-As imagens geradas são utilizadas como evidências em comunicações,
-análises e registros de incidentes.
+As imagens geradas são utilizadas como evidências em análises,
+investigações e comunicações relacionadas ao incidente.
 
 Funcionalidades:
     - Acesso automatizado à plataforma de monitoramento.
     - Autenticação utilizando credenciais configuradas.
-    - Busca dinâmica da operadora selecionada.
-    - Captura de screenshots dos cards operacionais.
-    - Armazenamento das evidências em formato PNG.
+    - Identificação dinâmica da operadora.
+    - Captura do card operacional correspondente.
+    - Armazenamento da evidência em formato PNG.
 
 Dependências:
     - Playwright
@@ -27,7 +27,7 @@ Variáveis de ambiente:
     - PASSWORD
 
 Saída:
-    Arquivos PNG contendo os cards operacionais capturados.
+    Arquivos PNG contendo a visão operacional da operadora.
 """
 
 import os, sys
@@ -44,27 +44,27 @@ password = os.getenv("PASSWORD")
 
 def print_operadora(operadora, pasta_saida):
     """
-    Captura o card operacional de uma operadora e salva a
-    evidência em formato PNG.
+    Captura o card operacional de uma operadora.
      
-    A função acessa a plataforma de monitoramento, realiza login,
-    localiza o card correspondente à operadora informada e gera
-    uma captura de tela do componente.
+    A função acessa automaticamente a plataforma de monitoramento,
+    realiza autenticação, localiza o card correspondente à operadora
+    informada e gera uma captura de tela da evidência.
      
     Args:
     operadora (str):
     Nome da operadora que será localizada na plataforma.
      
     pasta_saida (str):
-    Diretório onde a imagem será armazenada.
+    Diretório onde a captura será armazenada.
      
     Fluxo:
-    1. Inicia o navegador Chromium.
-    2. Abre a plataforma de monitoramento.
+    1. Inicializa o navegador Chromium.
+    2. Acessa a plataforma de monitoramento.
     3. Realiza autenticação.
     4. Localiza o card da operadora.
-    5. Captura a evidência visual.
-    6. Salva o arquivo em formato PNG.
+    5. Aguarda a exibição do componente.
+    6. Captura a evidência operacional.
+    7. Salva a imagem em formato PNG.
      
     Arquivos gerados:
     <operadora>.png
@@ -73,44 +73,55 @@ def print_operadora(operadora, pasta_saida):
      
     print_operadora(
     operadora="BANCO_HORIZONTE",
-    pasta_saida="evidencias"
+    pasta_saida="output/printOP"
     )
      
     Returns:
     None
+     
+    Raises:
+    Exception:
+    Exibe mensagem de erro caso a operadora não seja
+    encontrada ou ocorra falha durante a captura.
      
     Observação:
     O diretório de saída é criado automaticamente caso não exista.
     """
     """Gera o print da operadora e salva no arquivo correto dentro da pasta de saída."""
     with sync_playwright() as p:
-        # Define o caminho do navegador Chromium utilizado pelo Playwright.
+        # Ajusta caminho do Chromium
         if getattr(sys, 'frozen', False):
             base_path = sys._MEIPASS
+
+            chromium_path = os.path.join(
+                base_path,
+                "chromium-1234",
+                "chrome-win64",
+                "chrome.exe"
+            )
+
+            browser = p.chromium.launch(executable_path=chromium_path)
+
         else:
-            base_path = os.path.dirname(__file__)
-
-        chromium_path = os.path.join(base_path, "chromium-1234", "chrome-win64", "chrome.exe")
-
-        browser = p.chromium.launch(executable_path=chromium_path)
+            browser = p.chromium.launch()
         page = browser.new_page()
         page.set_viewport_size({"width": 1920, "height": 1080})
 
-        # Realiza autenticação na plataforma de monitoramento.
+        # Login
         page.goto(mon_operadoras)
         page.fill("input[name='user']", user)
         page.fill("input[name='password']", password)
         page.click("button[type='submit']")
         page.wait_for_load_state("networkidle")
 
-        # Oculta o menu lateral para facilitar a visualização dos cards.
+        # Fecha aba lateral
         botao = page.locator("#dock-menu-button")
         botao.click()
 
         page.wait_for_selector(".card-operadora .card-header")
 
         try:
-            # Procura o card operacional da operadora informada.
+            # Localiza card da operadora
             operadora_card = page.locator(".card-operadora").filter(
                 has=page.locator(".card-header", has_text=re.compile(fr"^\s*{operadora}\s*$", re.IGNORECASE))
             )
@@ -118,16 +129,16 @@ def print_operadora(operadora, pasta_saida):
             operadora_card.wait_for(state="visible", timeout=10000)
             operadora_card.scroll_into_view_if_needed()
 
-            # Monta o caminho completo para armazenamento da evidência.
+            # Ajusta caminho de saída (arquivo completo, não pasta)
             pasta_saida = get_output_path(pasta_saida)  # garante que a pasta exista
             filename = f"{operadora}.png"
             fullpath = os.path.join(pasta_saida, filename)
 
-           # Garante que o arquivo será salvo com extensão PNG.
+            # Garante que termina com .png
             if not fullpath.lower().endswith(".png"):
                 fullpath += ".png"
 
-            # Captura e salva a evidência visual do card operacional.
+            # Salva o print diretamente no arquivo
             operadora_card.screenshot(path=fullpath)
             print(f"Arquivo salvo em: {fullpath}")
 

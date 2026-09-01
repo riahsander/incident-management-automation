@@ -27,7 +27,7 @@ Autor:
 Riah Sander Cavalheiro
  
 Versão:
-1.0
+1.0.1
 """
 
 import json

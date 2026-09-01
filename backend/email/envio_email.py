@@ -2,20 +2,20 @@
 envio_email.py
 
 Módulo responsável pela geração e preparação das comunicações de
-incidentes via Microsoft Outlook.
+incidentes por meio do Microsoft Outlook.
 
-A partir das informações registradas durante a execução da aplicação,
-o módulo identifica os destinatários da operadora afetada, monta o
-conteúdo do e-mail, anexa as evidências geradas e abre uma nova
-mensagem no Outlook pronta para envio.
+A partir das informações coletadas durante a execução da aplicação,
+o módulo identifica os destinatários da operadora afetada, monta uma
+comunicação padronizada em HTML, incorpora a assinatura do Outlook e
+adiciona automaticamente as evidências geradas pelo sistema.
 
 Funcionalidades:
-    - Carregamento dos destinatários por operadora.
-    - Leitura das informações do incidente.
-    - Recuperação automática da assinatura do Outlook.
-    - Geração dinâmica do assunto do e-mail.
-    - Construção do corpo da mensagem em HTML.
-    - Inclusão automática de evidências como anexos.
+    - Carregamento automático de destinatários por operadora.
+    - Leitura dos dados do incidente.
+    - Recuperação da assinatura padrão do Outlook.
+    - Construção dinâmica do assunto do e-mail.
+    - Geração de conteúdo HTML formatado.
+    - Inclusão automática de anexos.
     - Integração com Microsoft Outlook.
 
 Arquivos utilizados:
@@ -27,6 +27,9 @@ Dependências:
     - python-dotenv
     - json
     - datetime
+
+Saída:
+    - Nova mensagem de e-mail aberta no Outlook.
 """
 
 import json
@@ -43,12 +46,12 @@ def get_emails(operadora):
     Recupera os destinatários associados a uma operadora.
      
     A função consulta o arquivo de configuração contendo os
-    destinatários cadastrados e retorna uma string formatada
-    para utilização no campo "Para" do Outlook.
+    grupos de e-mail cadastrados para cada operadora e
+    retorna os endereços formatados para utilização no Outlook.
      
     Args:
     operadora (str):
-    Nome da operadora utilizada para busca.
+    Nome da operadora utilizada na busca.
      
     Returns:
     str:
@@ -70,45 +73,53 @@ def enviar_email(chamado):
     """
     Cria uma comunicação de incidente utilizando Microsoft Outlook.
      
-    A função carrega os dados do incidente registrados pela aplicação,
-    obtém a lista de destinatários da operadora selecionada, monta o
-    conteúdo da mensagem em HTML e adiciona as evidências geradas
-    durante o processamento.
+    A função recupera as informações registradas durante o fluxo da
+    aplicação, identifica os destinatários responsáveis pela operadora
+    afetada e prepara uma mensagem pronta para envio.
      
     Fluxo:
-    1. Carrega as informações do incidente.
+    1. Carrega os dados do incidente.
     2. Obtém os destinatários configurados.
     3. Recupera a assinatura padrão do Outlook.
-    4. Cria um novo e-mail.
-    5. Monta o assunto da comunicação.
-    6. Gera o conteúdo HTML.
+    4. Cria uma nova mensagem.
+    5. Monta o assunto do incidente.
+    6. Gera o conteúdo HTML da comunicação.
     7. Adiciona evidências como anexos.
     8. Exibe o e-mail para revisão e envio.
      
     Args:
-    chamado (str):
+    chamado (str | int):
     Identificador do chamado associado ao incidente.
      
-    Anexos possíveis:
-    - Evidência operacional.
-    - Evidência transacional.
+    Anexos suportados:
+    - print_operadora
+    - print_grafico
+    - print_op_detalhado
+     
+    Informações exibidas na comunicação:
+    - Parceiro
+    - Status das transações
+    - Presença de erros no autorizador
+    - Tipo de indisponibilidade
+    - Hora de início do incidente
+    - Número do chamado
      
     Returns:
     None
      
     Raises:
     Exception:
-    Registra no console qualquer erro ocorrido durante a
-    preparação da comunicação.
+    Registra no console qualquer erro ocorrido durante
+    a montagem da comunicação.
     """
     print("Enviando e-mail...")
     try:
-        # Carrega as informações previamente registradas para o incidente.
+        # Carrega dados do incidente
         file_path = get_path(os.path.join("data", "info_incidente.json"))
         with open(file_path, "r", encoding="utf-8") as o:
             info_incidente = json.load(o)
 
-        # Recupera automaticamente a assinatura padrão configurada no Outlook.
+        # Busca assinatura automaticamente
         assinatura_dir = os.path.join(os.environ["APPDATA"], "Microsoft", "Signatures")
         assinatura_html = ""
         if os.path.exists(assinatura_dir):
@@ -118,11 +129,10 @@ def enviar_email(chamado):
                         assinatura_html = f.read()
                     break
 
-        # Atualiza a referência temporal utilizada na comunicação
-        # com o horário da geração do e-mail.
-        info_incidente["hora_inicio"] = datetime.now().strftime("%H:%M")
+        # Recupera o horário de início informado durante o registro do incidente.
+        hora_inicio_incidente = info_incidente.get("hora_inicio", "99:99")
 
-        # Inicializa a integração com o Microsoft Outlook.
+        # Cria objeto Outlook
         outlook = win32.Dispatch("outlook.application")
         email = outlook.CreateItem(0)
 
@@ -130,10 +140,10 @@ def enviar_email(chamado):
         status = info_incidente.get("status", "N/A")
 
         email.To = get_emails(parceiro)
-        email.CC = "noc@empresa.com.br"
-        email.Subject = f"Transações {status} - {parceiro} - Chamado {chamado}"
+        email.CC = "noc@empresa.com.br; sustentacaoti@empresa.com.br"
+        email.Subject = f"Status Transações {status} - {parceiro} - Chamado {chamado}"
 
-        # Monta dinamicamente o conteúdo HTML da comunicação.
+        # Corpo do e-mail
         email.HTMLBody = f"""
         <html>
         <body style="font-family: Calibri, Arial, sans-serif; font-size: 12pt; color: #1a1a1a; line-height: 1.5;">
@@ -151,7 +161,7 @@ def enviar_email(chamado):
                 <tr><td style="padding:4px 8px; font-weight:bold;">Indisponibilidade:</td>
                     <td style="padding:4px 8px;">{info_incidente.get("indisponibilidade","N/A")}</td></tr>
                 <tr><td style="padding:4px 8px; font-weight:bold;">Hora Início:</td>
-                    <td style="padding:4px 8px;">{info_incidente["hora_inicio"]}</td></tr>
+                    <td style="padding:4px 8px;">{hora_inicio_incidente}</td></tr>
             </table>
             <hr style="border:none; border-top:1px solid #ccc; margin:16px 0;">
             <br>{assinatura_html}
@@ -159,12 +169,15 @@ def enviar_email(chamado):
         </html>
         """
 
-        # Adiciona as evidências geradas ao e-mail quando disponíveis.
+        # Anexos só se existirem
         if info_incidente.get("print_operadora") and os.path.exists(info_incidente["print_operadora"]):
             email.Attachments.Add(info_incidente["print_operadora"])
 
         if info_incidente.get("print_grafico") and os.path.exists(info_incidente["print_grafico"]):
             email.Attachments.Add(info_incidente["print_grafico"])
+
+        if info_incidente.get("print_op_detalhado") and os.path.exists(info_incidente["print_op_detalhado"]):
+            email.Attachments.Add(info_incidente["print_op_detalhado"])
 
         email.Display()
         print("Email enviado com sucesso!")
