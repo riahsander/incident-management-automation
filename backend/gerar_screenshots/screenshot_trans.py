@@ -43,6 +43,50 @@ password = os.getenv("PASSWORD")
 
 
 def print_grafico(operadora, pasta_saida):
+    """
+    Captura o gráfico transacional associado a uma operadora.
+     
+    A função acessa a plataforma de monitoramento, realiza login,
+    localiza o gráfico correspondente à operadora informada e gera
+    uma captura de tela da evidência.
+     
+    Args:
+    operadora (str):
+    Nome da operadora utilizada na busca do gráfico.
+     
+    pasta_saida (str):
+    Diretório onde a evidência será armazenada.
+     
+    Fluxo:
+    1. Inicializa o navegador Chromium.
+    2. Acessa a plataforma de monitoramento.
+    3. Realiza autenticação.
+    4. Localiza o gráfico da operadora.
+    5. Aguarda a exibição do componente.
+    6. Captura a evidência gráfica.
+    7. Salva a imagem em formato PNG.
+     
+    Arquivos gerados:
+    <operadora>.png
+     
+    Exemplo:
+     
+    print_grafico(
+    operadora="TRANSACOES_PIX",
+    pasta_saida="output/printGraf"
+    )
+     
+    Returns:
+    None
+     
+    Raises:
+    Exception:
+    Exibe mensagem de erro caso o gráfico não seja
+    encontrado ou ocorra falha durante a captura.
+     
+    Observação:
+    O diretório de saída é criado automaticamente caso não exista.
+    """
     """Gera o print do gráfico da operadora e salva no arquivo correto dentro da pasta de saída."""
     with sync_playwright() as p:
         # Ajusta caminho do Chromium

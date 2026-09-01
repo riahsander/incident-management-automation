@@ -1,3 +1,36 @@
+"""
+screenshot_detalhado.py
+
+Módulo responsável pela captura automatizada da visão detalhada das
+transações de uma operadora.
+
+Utilizando Playwright, o módulo acessa a plataforma de monitoramento,
+realiza autenticação, localiza a operadora selecionada e abre a visão
+detalhada das transações para geração de uma evidência visual.
+
+As imagens geradas são utilizadas como apoio na análise e comunicação
+de incidentes operacionais.
+
+Funcionalidades:
+    - Acesso automatizado à plataforma de monitoramento.
+    - Autenticação utilizando credenciais configuradas.
+    - Localização dinâmica da operadora.
+    - Abertura da visão detalhada das transações.
+    - Captura de screenshot do painel detalhado.
+    - Armazenamento da evidência em formato PNG.
+
+Dependências:
+    - Playwright
+    - python-dotenv
+
+Variáveis de ambiente:
+    - MON_OPERADORAS
+    - USER
+    - PASSWORD
+
+Saída:
+    Arquivos PNG contendo a visão detalhada das transações da operadora.
+"""
 import os, sys
 from dotenv import load_dotenv
 from playwright.sync_api import sync_playwright
@@ -11,6 +44,47 @@ password = os.getenv("PASSWORD")
 
 
 def print_opdetalhado(operadora, pasta_saida):
+    """
+    Captura a visão detalhada das transações de uma operadora.
+     
+    A função acessa a plataforma de monitoramento, realiza login,
+    identifica o card da operadora selecionada, abre a visão
+    detalhada das transações e gera uma captura de tela do painel.
+     
+    Args:
+    operadora (str):
+    Nome da operadora que será localizada na plataforma.
+     
+    pasta_saida (str):
+    Diretório onde a evidência será armazenada.
+     
+    Fluxo:
+    1. Inicializa o navegador Chromium.
+    2. Acessa a plataforma de monitoramento.
+    3. Realiza autenticação.
+    4. Localiza o card da operadora.
+    5. Abre a visão detalhada das transações.
+    6. Aguarda o carregamento da nova aba.
+    7. Ajusta o zoom da página.
+    8. Captura a evidência do painel detalhado.
+    9. Salva a imagem em formato PNG.
+     
+    Arquivos gerados:
+    <operadora>_detalhado.png
+     
+    Exemplo:
+     
+    print_opdetalhado(
+    operadora="BANCO_HORIZONTE",
+    pasta_saida="output/printOP_detalhado"
+    )
+     
+    Returns:
+    None
+     
+    Observação:
+    O diretório de saída é criado automaticamente caso não exista.
+    """
     with sync_playwright() as p:
         if getattr(sys, 'frozen', False):
             base_path = sys._MEIPASS

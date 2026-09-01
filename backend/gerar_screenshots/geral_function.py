@@ -45,6 +45,54 @@ with open(file_path, "r", encoding="utf-8") as f:
     grafico_operadora = json.load(f)
 
 def gerar_screenshot():
+    """
+    Gera todas as evidências visuais associadas ao incidente.
+     
+    A função recupera os dados registrados no incidente, identifica
+    a operadora selecionada e executa os módulos responsáveis pela
+    captura das evidências operacionais, operacionais detalhadas e
+    transacionais.
+     
+    Fluxo:
+    1. Carrega os dados do incidente.
+    2. Identifica a operadora informada.
+    3. Gera a evidência operacional.
+    4. Gera a evidência operacional detalhada.
+    5. Verifica se existe gráfico associado à operadora.
+    6. Gera a evidência transacional.
+    7. Atualiza o arquivo do incidente com os caminhos das
+    evidências produzidas.
+     
+    Evidências geradas:
+    - print_operadora
+    - print_op_detalhado
+    - print_grafico
+     
+    Diretórios utilizados:
+    - output/printOP
+    - output/printOP_detalhado
+    - output/printGraf
+     
+    Exemplo de atualização:
+     
+    {
+    "parceiro": "BANCO_HORIZONTE",
+    "print_operadora":
+    "output/printOP/BANCO_HORIZONTE.png",
+    "print_op_detalhado":
+    "output/printOP_detalhado/BANCO_HORIZONTE_detalhado.png",
+    "print_grafico":
+    "output/printGraf/Transacoes PIX.png"
+    }
+     
+    Returns:
+    None
+     
+    Raises:
+    Exception:
+    Exibe mensagens de erro caso ocorra alguma falha durante
+    a geração das evidências.
+    """
     file_info = get_path(os.path.join("data", "info_incidente.json"))
     with open(file_info, "r", encoding="utf-8") as f:
         info_incidente = json.load(f)
