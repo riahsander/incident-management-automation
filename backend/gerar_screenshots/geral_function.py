@@ -1,36 +1,20 @@
 """
-geral_function.py
+Orquestração da geração de evidências do incidente.
 
-Módulo responsável pela orquestração da geração de evidências do incidente.
+O módulo coordena as rotinas responsáveis pela captura das evidências
+utilizadas durante o registro de um incidente.
 
-A partir das informações registradas pelo usuário, o módulo identifica
-a operadora afetada e coordena a captura das evidências utilizadas nas
-análises e comunicações do incidente.
+Responsabilidades:
+    - Ler as informações do incidente.
+    - Identificar o parceiro relacionado ao incidente.
+    - Preparar os diretórios de saída das evidências.
+    - Gerar a captura do card da operadora.
+    - Gerar a captura detalhada das transações.
+    - Gerar o gráfico transacional quando disponível.
+    - Registrar os caminhos das evidências em info_incidente.json.
 
-Funcionalidades:
-    - Leitura dos dados do incidente.
-    - Geração de evidências operacionais.
-    - Geração de evidências operacionais detalhadas.
-    - Geração de evidências transacionais.
-    - Atualização do arquivo do incidente com os caminhos dos arquivos gerados.
-
-Arquivos utilizados:
-    - data/info_incidente.json
-    - data/operadoras.json
-
-Arquivos gerados:
-    - output/printOP/*.png
-    - output/printOP_detalhado/*.png
-    - output/printGraf/*.png
-
-Dependências internas:
-    - screenshot_op.py
-    - screenshot_detalhado.py
-    - screenshot_trans.py
-    - path_utils.py
-
-Fluxo:
-    Incidente → Captura de Evidências → Atualização dos Dados → Comunicação
+As evidências geradas são posteriormente utilizadas por outros
+componentes da automação.
 """
 
 import json
@@ -39,6 +23,8 @@ from backend.gerar_screenshots.screenshot_op import print_operadora
 from backend.gerar_screenshots.screenshot_trans import print_grafico
 from backend.path_utils import get_path, get_output_path
 from backend.gerar_screenshots.screenshot_detalhado import print_opdetalhado
+from backend.logger_config import logger
+
 
 file_path = get_path(os.path.join("data", "operadoras.json"))
 with open(file_path, "r", encoding="utf-8") as f:
@@ -46,53 +32,23 @@ with open(file_path, "r", encoding="utf-8") as f:
 
 def gerar_screenshot():
     """
-    Gera todas as evidências visuais associadas ao incidente.
-     
-    A função recupera os dados registrados no incidente, identifica
-    a operadora selecionada e executa os módulos responsáveis pela
-    captura das evidências operacionais, operacionais detalhadas e
-    transacionais.
-     
-    Fluxo:
-    1. Carrega os dados do incidente.
-    2. Identifica a operadora informada.
-    3. Gera a evidência operacional.
-    4. Gera a evidência operacional detalhada.
-    5. Verifica se existe gráfico associado à operadora.
-    6. Gera a evidência transacional.
-    7. Atualiza o arquivo do incidente com os caminhos das
-    evidências produzidas.
-     
+    Coordena a geração das evidências associadas ao incidente.
+
+    A função lê o parceiro armazenado em info_incidente.json e executa
+    as rotinas de captura disponíveis para a operadora.
+
     Evidências geradas:
-    - print_operadora
-    - print_op_detalhado
-    - print_grafico
-     
-    Diretórios utilizados:
-    - output/printOP
-    - output/printOP_detalhado
-    - output/printGraf
-     
-    Exemplo de atualização:
-     
-    {
-    "parceiro": "BANCO_HORIZONTE",
-    "print_operadora":
-    "output/printOP/BANCO_HORIZONTE.png",
-    "print_op_detalhado":
-    "output/printOP_detalhado/BANCO_HORIZONTE_detalhado.png",
-    "print_grafico":
-    "output/printGraf/Transacoes PIX.png"
-    }
-     
+        - Card da operadora.
+        - Detalhamento transacional da operadora.
+        - Gráfico transacional, quando configurado para o parceiro.
+
+    Após as capturas, os caminhos dos arquivos gerados são adicionados
+    ao arquivo data/info_incidente.json.
+
     Returns:
-    None
-     
-    Raises:
-    Exception:
-    Exibe mensagens de erro caso ocorra alguma falha durante
-    a geração das evidências.
+        None
     """
+    logger.info("Iniciando a criação de evidências...")
     file_info = get_path(os.path.join("data", "info_incidente.json"))
     with open(file_info, "r", encoding="utf-8") as f:
         info_incidente = json.load(f)
@@ -123,5 +79,6 @@ def gerar_screenshot():
         with open(file_info, "w", encoding="utf-8") as f:
             json.dump(info_incidente, f, ensure_ascii=False, indent=4)
 
-    except Exception as e:
-        print("ERRO:", e)
+    except Exception:
+        logger.exception("ERRO na geração de evidências.")
+

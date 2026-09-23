@@ -1,22 +1,96 @@
-# Variáveis de ambiente
+# ============================================================
+# VARIAVEIS DE AMBIENTE / CREDENCIAIS
+# ============================================================
+
 .env
+.env.*
+!.env.example
 
-# Cache Python
+
+# ============================================================
+# DADOS INTERNOS / GERADOS DURANTE A EXECUCAO
+# ============================================================
+
+data/info_incidente.json
+data/email_op.json
+data/operadoras.json
+
+# Mantem exemplos versionados
+!data/info_incidente.example.json
+!data/email_op.example.json
+
+
+# ============================================================
+# ARQUIVOS GERADOS PELA AUTOMACAO
+# ============================================================
+
+output/
+*.log
+
+
+# ============================================================
+# PYTHON
+# ============================================================
+
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
 
-# Ambiente virtual
-venv/
+# Cache de ferramentas
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+
+# ============================================================
+# AMBIENTE VIRTUAL
+# ============================================================
+
 .venv/
+venv/
+env/
 
-# VS Code
-.vscode/
 
-# Build do PyInstaller
+# ============================================================
+# PYINSTALLER / BUILD
+# ============================================================
+
 build/
 dist/
+*.exe
+
+# Arquivos temporarios do PyInstaller
+*.manifest
 
 
-# Sistema operacional
-Thumbs.db
+# ============================================================
+# IDE / EDITORES
+# ============================================================
+
+.vscode/
+.idea/
+
+*.swp
+*.swo
+
+
+# ============================================================
+# SISTEMA OPERACIONAL
+# ============================================================
+
 .DS_Store
+Thumbs.db
+desktop.ini
+
+
+# ============================================================
+# ARQUIVOS TEMPORARIOS
+# ============================================================
+
+*.tmp
+*.temp
+*.bak
+*.old
+~$*

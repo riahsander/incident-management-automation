@@ -1,349 +1,216 @@
-# Sistema de Monitoramento e Comunicação de Incidentes
+# Automação de Incidentes Transacionais
 
-Projeto desenvolvido em Python para automatizar o registro, documentação e comunicação de incidentes operacionais.
+Automação desenvolvida para **reduzir o tempo de reporte e acionamento após a identificação de um incidente transacional**, padronizando e automatizando as principais etapas do processo operacional.
 
-A aplicação centraliza a coleta de informações, registra ocorrências em uma plataforma de chamados, gera evidências visuais automaticamente e prepara comunicações para as equipes responsáveis.
+A solução integra **Python**, **Playwright**, **Microsoft Outlook** e **Power Automate**, automatizando desde a abertura do incidente até a comunicação de normalização.
 
-Essa automação ainda está em estágio inicial, no futuro será feito correções, atualizações e melhorias. 
+O código público demonstra a arquitetura, a lógica e suas habilidades técnicas, sem revelar os dados, relacionamentos, acessos ou particularidades do ambiente corporativo real.
 
-Futuras melhorias: Adicionar um criador de logs para facilitar a identificação de erros, integrar o preenchimento de planilhas Excel e automatizar o envio de mensagens via Teams.
+## Objetivo
 
-> **Importante**
->
-> Esta é uma versão demonstrativa do projeto.
-> Todos os clientes, operadoras, destinatários, URLs, credenciais e demais informações corporativas foram anonimizados e substituídos por dados fictícios para fins de portfólio.
+Reduzir atividades manuais e o tempo necessário para comunicar e registrar incidentes transacionais.
 
----
+A automação é responsável por:
 
-# Objetivo
-
-O objetivo da automação é reduzir o tempo de tratamento de incidentes através da integração entre:
-
-- Registro de informações
-- Abertura de chamados
-- Captura de evidências
-- Comunicação por e-mail
-
-Todo o processo é executado de forma automatizada a partir de um único formulário.
+- Coletar as informações do incidente;
+- Abrir e encerrar chamados automaticamente;
+- Gerar evidências do ambiente transacional;
+- Enviar comunicações por e-mail;
+- Calcular a perda média transacional estimada;
+- Acionar fluxos do Power Automate;
+- Publicar comunicações operacionais;
+- Atualizar o registro do incidente;
+- Registrar logs para acompanhamento e troubleshooting.
 
 ---
 
-# Funcionalidades
+## Arquitetura
 
-✅ Interface gráfica para registro de incidentes
+A solução utiliza uma arquitetura híbrida, na qual o Python executa o processamento principal e o Power Automate dá continuidade aos processos de registro e encerramento.
 
-✅ Persistência das informações em JSON
-
-✅ Integração com plataforma de chamados via Playwright
-
-✅ Geração automática de evidências operacionais
-
-✅ Geração automática de gráficos transacionais
-
-✅ Atualização automática dos dados do incidente
-
-✅ Preparação de comunicação via Microsoft Outlook
-
-✅ Inclusão automática de anexos
-
-✅ Compatibilidade com execução local e executável (.exe)
-
----
-
-# Tecnologias Utilizadas
-
-- Python
-- Tkinter
-- Playwright
-- PyWin32 (Outlook)
-- JSON
-- Python Dotenv
-- PyInstaller
-
----
-
-# Fluxo da Aplicação
-
-```text
-Usuário
-   │
-   ▼
-Interface de Registro
-   │
-   ▼
-Persistência dos Dados
-   │
-   ▼
-Abertura Automática de Chamado
-   │
-   ▼
-Geração de Evidências
-   │
-   ├── Screenshot Operacional
-   │
-   └── Screenshot Transacional
-   │
-   ▼
-Atualização do Incidente
-   │
-   ▼
-Geração do E-mail
-   │
-   ▼
-Outlook
+```mermaid
+graph TD
+    User([Usuário]) --> Tkinter[Interface Tkinter]
+    Tkinter --> Python[Aplicação Python]
+    Python --> Qualitor[Qualitor]
+    Python --> Mon[Monitoramento Transacional]
+    Python --> Evidencia[Geração de Evidências]
+    Python --> Analise[Análise Transacional]
+    Python --> Outlook[Outlook]
+    Outlook --> Email[E-mail]
+    Email --> PA[Power Automate]
+    PA --> Teams[Microsoft Teams]
+    PA --> Reg[Registro Operacional]
 ```
 
 ---
 
-# Estrutura do Projeto
+## Fluxos
+
+A automação possui dois fluxos principais.
+
+### Registro de Incidente
+
+```mermaid
+graph TD
+    A[Identificação do Incidente] --> B[Preenchimento das Informações]
+    B --> C[Abertura do Chamado]
+    C --> D[Geração de Evidências]
+    D --> E[Envio do Acionamento]
+    E --> F[Power Automate]
+    F --> G[Comunicação e Registro]
+```
+
+Durante o registro, a automação coleta informações como parceiro, tipo de transação, status, indisponibilidade e horário de início.
+
+Também são geradas, quando disponíveis:
+- Evidência da operadora;
+- Detalhamento transacional;
+- Gráfico transacional.
+
+---
+
+### Finalização de Incidente
+
+```mermaid
+graph TD
+    A[Normalização] --> B[Preenchimento das Informações]
+    B --> C[Localização do Chamado]
+    C --> D[Coleta de Dados Adicionais]
+    D --> E[Análise Transacional]
+    E --> F[Cálculo da Perda Média Estimada]
+    F --> G[Encerramento do Chamado]
+    G --> H[Envio da Normalização]
+    H --> I[Power Automate]
+    I --> J[Comunicação e Atualização do Registro]
+```
+
+---
+
+## Estrutura do Projeto
 
 ```text
-.
-├── main.py
-│
-├── frontend/
-│   └── screen.py
+projeto/
 │
 ├── backend/
+│   ├── avg_transacional/
+│   │   └── avg_perda.py
 │   │
 │   ├── email/
 │   │   └── envio_email.py
 │   │
 │   ├── gerar_screenshots/
 │   │   ├── geral_function.py
+│   │   ├── screenshot_detalhado.py
 │   │   ├── screenshot_op.py
 │   │   └── screenshot_trans.py
 │   │
 │   ├── qualitor/
-│   │   └── abertura_chamado.py
+│   │   ├── abertura_chamado.py
+│   │   └── encerra_chamado.py
 │   │
+│   ├── logger_config.py
 │   └── path_utils.py
 │
 ├── data/
-│   ├── info_incidente.json
-│   ├── email_op.json
-│   └── operadoras.json
+│   ├── email_op.example.json
+│   ├── info_incidente.example.json
+│   └── operadoras.example.json
 │
+├── frontend/
+│   └── screen.py
+│
+├── main.py
+├── main.spec
+├── build.bat
+├── instalar_automacao.bat
+├── .env.example
 └── README.md
 ```
 
 ---
 
-# Módulos
+## Principais Componentes
 
-## main.py
+### `main.py`
+Ponto de entrada da aplicação e responsável pela orquestração dos fluxos de registro e finalização.
 
-Ponto de entrada da aplicação.
+### `frontend/screen.py`
+Interface gráfica desenvolvida com Tkinter para coleta das informações e seleção da operação.
 
-Responsável por coordenar todo o fluxo de execução:
+### `backend/qualitor/`
+Automatiza a abertura e o encerramento de chamados utilizando Playwright.
 
-- Coleta informações do incidente
-- Registra o chamado
-- Gera evidências
-- Aciona a comunicação
+### `backend/gerar_screenshots/`
+Responsável pela geração automática das evidências utilizadas durante o acionamento.
+
+### `backend/avg_transacional/`
+Realiza a análise histórica do período do incidente e obtém uma estimativa da perda média transacional.
+
+### `backend/email/`
+Responsável pela criação e pelo envio das comunicações através do Microsoft Outlook.
+
+### `backend/logger_config.py`
+Centraliza a configuração e o armazenamento dos logs da aplicação.
 
 ---
 
-## frontend/screen.py
+## Integração com Power Automate
 
-Interface gráfica desenvolvida com Tkinter.
+O Power Automate complementa o processamento realizado pelo Python de forma assíncrona. A integração ocorre através do **disparo de e-mails estruturados** enviados pela aplicação Python para uma caixa de correio monitorada. 
 
-Permite o registro de:
+O Power Automate possui dois fluxos principais ativos:
+* **Automação Incidente - Abertura:** Disparado ao receber o e-mail de acionamento. Publica alertas nos canais do Microsoft Teams e cria o registro operacional inicial.
+* **Automação Incidente - Encerramento:** Disparado ao receber o e-mail de normalização. Atualiza o painel operacional, anexa os indicadores de perda estimada e encerra o ciclo do incidente.
 
-- Parceiro
-- Status das transações
-- Existência de autorizador
-- Tipo de indisponibilidade
-- Horário de início
+---
 
-Os dados são armazenados em:
+## Tecnologias Utilizadas
+
+A automação utiliza diferentes tecnologias para integrar sistemas, automatizar tarefas operacionais e dar continuidade ao processo de gestão de incidentes.
+
+### Python
+Responsável pela lógica principal e pela orquestração dos fluxos de registro e finalização de incidentes.
+
+### Playwright
+Utilizado para automação web, permitindo a interação com o Qualitor, portais transacionais e ambientes de monitoramento.
+
+### Tkinter
+Utilizado na construção da interface gráfica para coleta das informações e seleção das operações da automação.
+
+### Microsoft Outlook
+Responsável pelo envio automatizado das comunicações de abertura e normalização dos incidentes, além de funcionar como ponto de integração com o Power Automate.
+
+### Microsoft Power Automate
+Responsável pela continuidade dos fluxos após o processamento realizado pelo Python, incluindo extração de informações, comunicação operacional e atualização dos registros.
+
+### Microsoft Teams
+Utilizado para publicação das comunicações de abertura e normalização dos incidentes.
+
+### Microsoft Excel
+Utilizado pelo Power Automate para consulta e atualização dos registros operacionais dos incidentes.
+
+### JSON
+Utilizado para armazenamento temporário do estado do incidente e para configurações externas da aplicação.
+
+### Python Logging
+Responsável pela rastreabilidade da execução, registro de eventos, erros e informações utilizadas no troubleshooting.
+
+### PyInstaller
+Utilizado para empacotar a aplicação Python e seus recursos em um executável para ambiente Windows.
+
+## Stack da Solução
 
 ```text
-data/info_incidente.json
-```
-
----
-
-## backend/qualitor/abertura_chamado.py
-
-Responsável pela automação da abertura de chamados.
-
-Utiliza Playwright para:
-
-- Realizar login
-- Preencher formulários
-- Registrar ocorrências
-- Obter o identificador do chamado
-
----
-
-## backend/gerar_screenshots/screenshot_op.py
-
-Responsável pela captura de evidências operacionais.
-
-Principais ações:
-
-- Acesso à plataforma de monitoramento
-- Localização do card da operadora
-- Captura automática da evidência
-
-Saída:
-
-```text
-printOP/
-```
-
----
-
-## backend/gerar_screenshots/screenshot_trans.py
-
-Responsável pela captura de gráficos transacionais.
-
-Principais ações:
-
-- Login automatizado
-- Busca do gráfico da operadora
-- Captura da imagem
-
-Saída:
-
-```text
-printGraf/
-```
-
----
-
-## backend/gerar_screenshots/geral_function.py
-
-Camada de orquestração da geração de evidências.
-
-Responsável por:
-
-- Identificar a operadora
-- Gerar screenshots
-- Atualizar os caminhos dos arquivos gerados
-
----
-
-## backend/email/envio_email.py
-
-Responsável pela criação da comunicação do incidente.
-
-Funcionalidades:
-
-- Busca automática dos destinatários
-- Montagem do assunto
-- Geração do corpo HTML
-- Recuperação da assinatura do Outlook
-- Inclusão automática de anexos
-
----
-
-## backend/path_utils.py
-
-Módulo utilitário para gerenciamento de caminhos.
-
-Garantias:
-
-- Compatibilidade com execução local
-- Compatibilidade com PyInstaller
-- Criação automática de diretórios
-
----
-
-# Arquivos de Configuração
-
-## info_incidente.json
-
-Armazena os dados coletados durante a execução.
-
-Exemplo:
-
-```json
-{
-    "parceiro": "BANCO_HORIZONTE",
-    "autorizador": "Sim",
-    "status": "Pendentes",
-    "indisponibilidade": "Parcial",
-    "hora_inicio": "08:15"
-}
-```
-
----
-
-## email_op.json
-
-Mapeia os destinatários responsáveis por cada parceiro.
-
----
-
-## operadoras.json
-
-Relaciona parceiros e suas respectivas configurações de monitoramento.
-
----
-
-# Como Executar
-
-## Clonar o repositório
-
-```bash
-git clone [https://github.com/seu-usuario/nome-repositorio.git](https://github.com/riahsander/incident-management-automation.git)
-```
-
-## Instalar dependências
-
-```bash
-pip install -r requirements.txt
-```
-
-## Configurar variáveis de ambiente
-
-Crie um arquivo:
-
-```text
-.env
-```
-
-Exemplo:
-
-```env
-QUALITOR=https://portal-exemplo.com
-MON_OPERADORAS=https://monitoramento-exemplo.com
-TRANSACIONAL_GRAF=https://grafico-exemplo.com
-
-USER=usuario_exemplo
-PASSWORD=senha_exemplo
-```
-
-## Executar
-
-```bash
-python main.py
-```
-
----
-
-# Aprendizados Demonstrados
-
-Este projeto demonstra conhecimentos em:
-
-- Automação de processos
-- Integração entre sistemas
-- Manipulação de arquivos JSON
-- Desenvolvimento de interfaces gráficas
-- Automação Web com Playwright
-- Integração com Microsoft Outlook
-- Organização de projetos Python
-- Tratamento de múltiplos módulos
-- Empacotamento com PyInstaller
-
----
-
-# Autor
-
-**Riah Sander Cavalheiro**
-
-Analista de Monitoria
-
-Projeto desenvolvido para fins de estudo, automação de processos e demonstração técnica em portfólio.
+                    AUTOMAÇÃO
+                        │
+              ┌─────────┴─────────┐
+              │                   │
+        Aplicação Python     Power Automate
+              │                   │
+        ┌─────┼─────┐         ┌───┼───┐
+        │     │     │         │       │
+    Tkinter Playwright Outlook Teams  Excel
+              │
+              ▼
+       Sistemas Corporativos
